@@ -10,6 +10,9 @@ import { TruequeComponent } from './pages/trueque/trueque.component';
 import { ComunidadComponent } from './pages/comunidad/comunidad.component';
 import { BtruequeComponent } from './pages/btrueque/btrueque.component';
 
+import { FeniciaWsService } from './servicios/fenicia-ws.service';
+import { HttpClientModule } from '@angular/common/http';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -22,9 +25,12 @@ import { BtruequeComponent } from './pages/btrueque/btrueque.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    IonicModule.forRoot()
+    IonicModule.forRoot(),
+    HttpClientModule
   ],
-  providers: [],
+  providers: [
+    FeniciaWsService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

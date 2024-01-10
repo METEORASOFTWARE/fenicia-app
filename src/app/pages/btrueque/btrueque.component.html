@@ -8,5 +8,23 @@
 </ion-header>
 
 <ion-content>
-    <h1>Búsqueda de Trueque</h1>
+    <h1>Grupos para Trueque</h1>
+        <ion-list *ngFor="let tipo of tipos">
+            <ion-item>
+                <ion-label>  {{tipo.id}} + {{tipo.name}}</ion-label>
+            </ion-item>
+        </ion-list> 
+<!--    <button ion-item *ngFor="let tok of token">
+            {{tok.access_token}}
+        </button> -->
+<!-- 
+        <button ion-item *ngFor="let tipo of tipos">
+            {{tipo.DESC_NIVEL}}
+        </button> -->
+
+       <!--  <button ion-item >
+            {{tipo.id}} + {{tipo.name}}
+        </button> -->
+
+ 
 </ion-content>

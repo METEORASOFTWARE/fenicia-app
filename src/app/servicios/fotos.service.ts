@@ -8,7 +8,9 @@ export class fotosService {
 
   fotos: string [] = [];
 
-  constructor() { }
+  constructor() { 
+    console.log("mensaje: fotos.service")
+  }
 
   async agregarFoto(){
     const foto = await Camera.getPhoto({
