@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FeniciaWsService } from '../../servicios/fenicia-ws.service';
+import { TruequeService } from 'src/app/servicios/trueque.service';
+import { AuthService } from 'src/app/servicios/auth.service';
 
 @Component({
   selector: 'app-btrueque',
@@ -10,33 +12,38 @@ export class BtruequeComponent implements OnInit {
   tipos:any
   token:any
 
-  constructor(public tipo: FeniciaWsService) {
-    console.log('constructo')
-
+  constructor(public tipo: FeniciaWsService, private truequeService:TruequeService,private authService:AuthService) {
   }
 
- ngOnInit(){
-   console.log('OnInit')
-   this.tipo.obtenerServiceEjemplo().subscribe((data) =>{
-     console.log(data)
-     debugger;
-     this.tipos=data;
-   }) 
-  /*   this.tipo.ObtenerTipicas().then((result:any) =>{
-     console.log(result)
-   })   */
-/*   this.tipo.ObtenerTipicas()
-    .subscribe(
+  	private async _getTrueque(){
 
-      (data)=> { 
-        console.log(data)
-        // this.tipos=data;
-      
-      },
-      (error)=> {console.log(error);}
+		var tokenGenerated = await this.authService.generateToken();
 
-    ) */
- }
+		await this.truequeService.getTrueque().subscribe(
+			response => {
+				
+				if( response.success ){
+
+					this.tipos = response.data;
+				}
+				else{
+
+					alert( 'la Api envío errores' );
+				}
+			},
+			error => {
+			  console.error(error);
+			  alert('ocurrio un error inesperado');
+			}
+		  );
+		// this.tipos=data;
+	}
+
+  ngOnInit(){
+	console.log('OnInit');
+
+	this._getTrueque();
+  }
   ionViewDidLoad(){
 
 
@@ -53,11 +60,5 @@ export class BtruequeComponent implements OnInit {
       (error)=> {console.log(error);}
 
     ) */
-
-  
-
   }
-
-
-
 }
