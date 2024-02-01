@@ -33,6 +33,8 @@ export class TruequeService {
 
 		var token = localStorage.getItem('token');
 
+		debugger;
+
     	const headers = new HttpHeaders({
 			"Authorization": "Bearer "+token,
 			"Content-Type": "application/x-www-form-urlencoded"

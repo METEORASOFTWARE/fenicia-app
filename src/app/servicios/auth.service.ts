@@ -41,6 +41,8 @@ export class AuthService {
 		return await this._token().subscribe(
 			response => {
 				this.logout();
+
+				debugger;
 				localStorage.setItem('token', response.access_token);
 				localStorage.setItem('refresh_token', response.refresh_token);
 				localStorage.setItem('session_state', response.session_state);
