@@ -8,15 +8,19 @@
 </ion-header>
 
 <ion-content>
-    <ion-item>
-        <ion-label position="stacked">PRODUCTO O SERVICIO OFRECIDO</ion-label>
-        <ion-input class="ion-text-wrap" placeholder="Descripción (puede incluir imágenes)"></ion-input>
-      </ion-item>
-    <ion-img [src]="foto" *ngFor = "let foto of fotos"></ion-img>
-   <ion-fab vertical="top" horizontal="end" slot="fixed">
-        <ion-fab-button size="small" (click)="tomarFoto()">
-            <ion-icon name="camera"></ion-icon>
-        </ion-fab-button>
-   </ion-fab>
-   <ion-button  size="small">ENVIAR</ion-button>
-</ion-content> 
+  <ion-item>
+    <ion-label position="stacked">NOMBRE DEL SERVICIO</ion-label>
+    <ion-input class="ion-text-wrap" placeholder="Nombre" [(ngModel)]="nombreDelServicio"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label position="stacked">PRODUCTO O SERVICIO OFRECIDO</ion-label>
+    <ion-input class="ion-text-wrap" placeholder="Descripción (puede incluir imágenes)" [(ngModel)]="descripcionDelServicio"></ion-input>
+  </ion-item>
+  <ion-img [src]="foto" *ngFor = "let foto of fotos"></ion-img>
+  <ion-fab vertical="top" horizontal="end" slot="fixed">
+    <ion-fab-button size="small" (click)="tomarFoto()">
+      <ion-icon name="camera"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  <ion-button  (click)="enviarFormulario()" size="small">ENVIAR</ion-button>
+</ion-content>

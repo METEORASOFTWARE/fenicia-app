@@ -13,6 +13,8 @@ import { BtruequeComponent } from './pages/btrueque/btrueque.component';
 import { FeniciaWsService } from './servicios/fenicia-ws.service';
 import { HttpClientModule } from '@angular/common/http';
 
+import { FormsModule } from '@angular/forms';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -26,7 +28,8 @@ import { HttpClientModule } from '@angular/common/http';
     BrowserModule,
     AppRoutingModule,
     IonicModule.forRoot(),
-    HttpClientModule
+    HttpClientModule,
+    FormsModule
   ],
   providers: [
     FeniciaWsService

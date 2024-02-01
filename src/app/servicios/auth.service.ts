@@ -30,14 +30,14 @@ export class AuthService {
 		data.set('password', 'zu@yCh@o$sL1N#&');
 		data.set('grant_type', 'password');
 		data.set('client_id', 'meteora_ws');
-		  
+
 		return this.http.post<any>(`http://fenicia.meteoracolombia.co:8080/realms/meteora/protocol/openid-connect/token`, data.toString(), { headers }).pipe(
 			catchError(this.sharedService.handleErrorResponse)
 		);
 	}
 
 	async generateToken(){
-		
+
 		return await this._token().subscribe(
 			response => {
 				this.logout();
@@ -54,7 +54,7 @@ export class AuthService {
 	}
 
 	isAuthenticatedUser(): boolean {
-    
+
 		const storedData = localStorage.getItem('token');
 		return storedData !== null && storedData !== undefined;
 	}
