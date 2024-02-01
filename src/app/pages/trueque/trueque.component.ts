@@ -11,9 +11,9 @@ import { LoadingController } from '@ionic/angular';
 export class TruequeComponent {
 
   fotos: string[];
-  nextId: number| null;
-  nombreDelServicio: string;
-  descripcionDelServicio: string;
+  nextId: number| null = null;
+  nombreDelServicio: string = '';
+  descripcionDelServicio: string = '';
 
   constructor (
     private fotosService: fotosService,
@@ -30,6 +30,8 @@ export class TruequeComponent {
   }
 
   async enviarFormulario() {
+
+    var tokenGenerated = await this.authService.generateToken();
     await this.presentLoading();
 
     this.createDataTruque();
@@ -37,6 +39,7 @@ export class TruequeComponent {
   }
 
   createDataTruque(){
+    
     this.truequeService.getNextId().subscribe(
       (respuesta) => {
 
