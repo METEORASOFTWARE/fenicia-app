@@ -10,65 +10,73 @@ import { AuthService } from './auth.service';
 })
 export class TruequeService {
 
-	constructor(private http: HttpClient,
-		private authService: AuthService,
-		private sharedService:SharedService
-		) { }
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService,
+    private sharedService:SharedService
+  ){}
 
-	getTrueque(): Observable<any> {
+  private apiUrl = 'http://fenicia.meteoracolombia.co:8010/4p1';
 
-		var token = localStorage.getItem('token');
+  getTrueque(): Observable<any> {
+    var token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      "Authorization": "Bearer "+token,
+      "Content-Type": "application/x-www-form-urlencoded"
+    });
 
-		const headers = new HttpHeaders({
-			"Authorization": "Bearer "+token,
-			"Content-Type": "application/x-www-form-urlencoded"
-		});
+    return this.http.get(`${this.apiUrl}/GrupoElementosController.php`,{headers}).pipe(
+      catchError(this.sharedService.handleErrorResponse)
+    );
+  }
 
-		return this.http.get(`http://fenicia.meteoracolombia.co:8010/4p1/GrupoElementosController.php`,{headers}).pipe(
-			catchError(this.sharedService.handleErrorResponse)
-		);
-	}
+  getNextId(): Observable<any> {
+    var token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      "Authorization": "Bearer "+token,
+      "Content-Type": "application/x-www-form-urlencoded"
+    });
 
-  	getNextId(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/ProxPTController.php`,{headers}).pipe(
+      catchError(this.sharedService.handleErrorResponse)
+    );
+  }
 
-		var token = localStorage.getItem('token');
+  getPar(): Observable<any> {
+    var token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      "Authorization": "Bearer "+token,
+      "Content-Type": "application/x-www-form-urlencoded"
+    });
 
-		debugger;
+    return this.http.get(`${this.apiUrl}/ParFeniciaController.php`,{headers}).pipe(
+      catchError(this.sharedService.handleErrorResponse)
+    );
+  }
 
-    	const headers = new HttpHeaders({
-			"Authorization": "Bearer "+token,
-			"Content-Type": "application/x-www-form-urlencoded"
-		});
+  createProduct(data:URLSearchParams): Observable<any> {
+    var token = localStorage.getItem('token');
 
-		return this.http.get(`http://fenicia.meteoracolombia.co:8010/4p1/ProxPTController.php`,{headers}).pipe(
-			catchError(this.sharedService.handleErrorResponse)
-		);
-	}
+    const headers = new HttpHeaders({
+      "Authorization": "Bearer "+token,
+      "Content-Type": "application/x-www-form-urlencoded"
+    });
 
-  	getPar(): Observable<any> {
+    return this.http.post(`${this.apiUrl}/ProductController.php`,data, {headers}).pipe(
+      catchError(this.sharedService.handleErrorResponse)
+    );
+  }
 
-    	var token = localStorage.getItem('token');
+  storeImage(data:FormData): Observable<any> {
+    var token = localStorage.getItem('token');
 
-		const headers = new HttpHeaders({
-			"Authorization": "Bearer "+token,
-			"Content-Type": "application/x-www-form-urlencoded"
-		});
+    const headers = new HttpHeaders({
+      "Authorization": "Bearer "+token,
+      "Content-Type": "application/x-www-form-urlencoded"
+    });
 
-		return this.http.get(`http://fenicia.meteoracolombia.co:8010/4p1/ParFeniciaController.php`,{headers}).pipe(
-			catchError(this.sharedService.handleErrorResponse)
-		);
-	}
-
-  	createProduct(data:any): Observable<any> {
-    	var token = localStorage.getItem('token');
-
-		const headers = new HttpHeaders({
-			"Authorization": "Bearer "+token,
-			"Content-Type": "application/x-www-form-urlencoded"
-		});
-
-		return this.http.post(`http://fenicia.meteoracolombia.co:8010/4p1/ProductController.php`,data, {headers}).pipe(
-			catchError(this.sharedService.handleErrorResponse)
-		);
-	}
+    return this.http.post(`${this.apiUrl}/ImageProductController.php`,data, {headers}).pipe(
+      catchError(this.sharedService.handleErrorResponse)
+    );
+  }
 }

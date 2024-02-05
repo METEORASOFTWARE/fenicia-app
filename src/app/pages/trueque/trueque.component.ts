@@ -14,6 +14,8 @@ export class TruequeComponent {
   nextId: number| null = null;
   nombreDelServicio: string = '';
   descripcionDelServicio: string = '';
+  idCurrent:any;
+  parFenicia:any;
 
   constructor (
     private fotosService: fotosService,
@@ -22,46 +24,62 @@ export class TruequeComponent {
     private loadingController:LoadingController,
     ) {
     this.fotos = this.fotosService.fotos;
+    this.authService.generateToken();
+  }
+
+  _sendFotos(){
+    debugger;
+    this.fotos.map((f)=>{
+
+    });
   }
 
   async tomarFoto () {
     await this.fotosService.agregarFoto();
-    // console.log(this.fotos);
   }
 
   async enviarFormulario() {
 
     var tokenGenerated = await this.authService.generateToken();
-    await this.presentLoading();
-
+    this.presentLoading();
     this.createDataTruque();
-
   }
 
   createDataTruque(){
-    
+
     this.truequeService.getNextId().subscribe(
       (respuesta) => {
 
-        const nextId = respuesta.data[0][""];
-
+        this.idCurrent = respuesta.data[0][""];
+        this.idCurrent = this.idCurrent.toString().padStart(7, '0');
+        this.authService.generateToken();
+        
         this.truequeService.getPar().subscribe(
           (respuesta) => {
             const parData = respuesta.data[0];
-            const productData = {
-              'codigo': parData.A29_PRE+nextId,
-              'unidad':'U',
-              'nombre': this.nombreDelServicio,
-              'usuario':'FE-0000001',
-              'descripcion': this.descripcionDelServicio,
-              'agrextra': 224
-            }
 
-            console.log(productData);
+            this.parFenicia = parData;
+
+            var productData = new URLSearchParams();
+            productData.append("codigo", parData.A29_PRE+this.idCurrent);
+            productData.append("unidad", "U");
+            productData.append("nombre", this.nombreDelServicio);
+            productData.append("usuario", "FE-0000001");
+            productData.append("descripcion", this.descripcionDelServicio);
+            productData.append("agrextra", "224");
+
+            this.authService.generateToken();
 
             this.truequeService.createProduct(productData).subscribe(
               (respuesta) => {
                 console.log(respuesta);
+                
+                if(respuesta.success){
+                  this._sendFotos();
+                }
+                else{
+                  alert(respuesta.message);
+                }
               },
               (error) => {
                 console.error(error);
@@ -86,7 +104,7 @@ export class TruequeComponent {
   async presentLoading() {
     const loading = await this.loadingController.create({
       message: 'Cargando...',
-      duration: 3000 // Puedes ajustar la duración según tus necesidades
+      duration: 3000
     });
 
     await loading.present();
