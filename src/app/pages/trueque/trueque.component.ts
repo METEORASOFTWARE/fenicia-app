@@ -1,14 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {fotosService} from './../../servicios/fotos.service';
 import { TruequeService } from 'src/app/servicios/trueque.service';
 import { AuthService } from 'src/app/servicios/auth.service';
 import { LoadingController } from '@ionic/angular';
+import { FeniciaWsService } from 'src/app/servicios/fenicia-ws.service';
 
 @Component({
   selector: 'app-trueque',
-  templateUrl: './trueque.component.html'
+  templateUrl: './trueque.component.html',
+  styleUrls: ['./trueque.component.css']
 })
-export class TruequeComponent {
+export class TruequeComponent implements OnInit {
 
   fotos: string[];
   nextId: number| null = null;
@@ -16,16 +18,43 @@ export class TruequeComponent {
   descripcionDelServicio: string = '';
   idCurrent:any;
   parFenicia:any;
+  categorys:any;
 
   constructor (
     private fotosService: fotosService,
     private truequeService:TruequeService,
     private authService:AuthService,
     private loadingController:LoadingController,
+    private feniciaWsService:FeniciaWsService
     ) {
     this.fotos = this.fotosService.fotos;
     this.authService.generateToken();
   }
+
+  ngOnInit(){
+	  console.log('OnInit');
+
+	  this._getCategory();
+  }
+
+  private async _getCategory(){
+
+		var tokenGenerated = await this.authService.generateToken();
+
+		await this.truequeService.getTrueque().subscribe(
+			response => {
+				
+				if( response.success ){
+
+					this.categorys = response.data;
+				}
+			},
+			error => {
+			  console.error(error);
+			  alert('ocurrio un error inesperado');
+			}
+		);
+	}
 
   _sendFotos(){
     debugger;
@@ -108,5 +137,5 @@ export class TruequeComponent {
     });
 
     await loading.present();
-  }
+  } 
 }
