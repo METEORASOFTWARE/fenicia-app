@@ -17,16 +17,29 @@
     <ion-input class="ion-text-wrap" placeholder="Descripción (puede incluir imágenes)" [(ngModel)]="descripcionDelServicio"></ion-input>
   </ion-item>
   <ion-item>
-    <ion-label position="stacked">Categorías</ion-label>
+    <ion-label position="stacked">Categoría Principal</ion-label>
+    <ion-select placeholder="Selecciona una categoría" (ionChange)="selectCategoryPrincipal($event)">
+      <ion-select-option *ngFor="let categoryMajor of categoriesMajor" [value]="categoryMajor">
+        {{ categoryMajor.DESC_NIVEL }}
+      </ion-select-option>
+    </ion-select>
+  </ion-item>
+  <ion-item *ngIf="categoriesMajorCurrent != 0">
+    <ion-label position="stacked">Categorías Secundarias</ion-label>
     <ion-list>
-      <ion-item *ngFor="let category of categorys">
+      <ion-item *ngFor="let category of categories">
         <ion-label>{{ category.DESC_NIVEL }}</ion-label>
-        <ion-checkbox slot="start"></ion-checkbox>
+        <ion-checkbox slot="start" [(ngModel)]="category.isSelected"></ion-checkbox>
       </ion-item>
     </ion-list>
   </ion-item>
 
-  <ion-img [src]="foto" *ngFor = "let foto of fotos"></ion-img>
+  <ion-row>
+    <ion-col size="6" size-md="4" size-lg="3" *ngFor = "let foto of fotos">
+      <ion-img [src]="foto"></ion-img>
+    </ion-col>
+  </ion-row>
+
   <ion-fab vertical="top" horizontal="end" slot="fixed">
     <ion-fab-button size="small" (click)="tomarFoto()">
       <ion-icon name="camera"></ion-icon>

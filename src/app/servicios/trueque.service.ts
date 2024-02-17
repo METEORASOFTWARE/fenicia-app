@@ -67,7 +67,7 @@ export class TruequeService {
     );
   }
 
-  storeImage(data:FormData): Observable<any> {
+  storeImage(data:any): Observable<any> {
     var token = localStorage.getItem('token');
 
     const headers = new HttpHeaders({

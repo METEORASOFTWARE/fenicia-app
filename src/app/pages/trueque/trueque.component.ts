@@ -3,6 +3,7 @@ import {fotosService} from './../../servicios/fotos.service';
 import { TruequeService } from 'src/app/servicios/trueque.service';
 import { AuthService } from 'src/app/servicios/auth.service';
 import { LoadingController } from '@ionic/angular';
+import { Category } from 'src/app/interface/category.interface';
 import { FeniciaWsService } from 'src/app/servicios/fenicia-ws.service';
 
 @Component({
@@ -18,7 +19,9 @@ export class TruequeComponent implements OnInit {
   descripcionDelServicio: string = '';
   idCurrent:any;
   parFenicia:any;
-  categorys:any;
+  categories: Category[] = [];
+  categoriesMajor: Category[] = [];
+  categoriesMajorCurrent:Number = 0;
 
   constructor (
     private fotosService: fotosService,
@@ -45,21 +48,32 @@ export class TruequeComponent implements OnInit {
 			response => {
 				
 				if( response.success ){
+          
+					this.categories = response.data;
+          this.categoriesMajor = response.data;
 
-					this.categorys = response.data;
+          this.categories.forEach(category => category.isSelected = false);
 				}
 			},
 			error => {
 			  console.error(error);
-			  alert('ocurrio un error inesperado');
+        this._getCategory();
+			  console.warn('ocurrio un error inesperado');
 			}
 		);
 	}
 
   _sendFotos(){
-    debugger;
+    
+    var m = 1;
     this.fotos.map((f)=>{
-
+      var data = {
+        "codigo": this.idCurrent,
+        "consecutivo": m,
+        "imagen": f
+      };
+      this.truequeService.storeImage(data);
+      m++;
     });
   }
 
@@ -88,14 +102,15 @@ export class TruequeComponent implements OnInit {
             const parData = respuesta.data[0];
 
             this.parFenicia = parData;
+            this.idCurrent = parData.A29_PRE+this.idCurrent;
 
             var productData = new URLSearchParams();
-            productData.append("codigo", parData.A29_PRE+this.idCurrent);
+            productData.append("codigo", this.idCurrent);
             productData.append("unidad", "U");
             productData.append("nombre", this.nombreDelServicio);
             productData.append("usuario", "FE-0000001");
             productData.append("descripcion", this.descripcionDelServicio);
-            productData.append("agrextra", "224");
+            productData.append("agrextra", this.categoriesMajorCurrent.toString());
 
             this.authService.generateToken();
 
@@ -107,7 +122,7 @@ export class TruequeComponent implements OnInit {
                   this._sendFotos();
                 }
                 else{
-                  alert(respuesta.message);
+                  console.warn(respuesta.message);
                 }
               },
               (error) => {
@@ -137,5 +152,20 @@ export class TruequeComponent implements OnInit {
     });
 
     await loading.present();
-  } 
+  }
+
+  getSelectedCategories() {
+    return this.categories.filter(category => category.isSelected);
+  }
+
+  selectCategoryPrincipal($event:any):void{
+    var selectedCategory = $event.detail.value; // Aquí obtienes el valor de la categoría seleccionada
+    
+    if(selectedCategory){
+      this.categoriesMajorCurrent = selectedCategory.COD_NIVEL;
+      this.categories = this.categoriesMajor;
+
+      this.categories = this.categories.filter(category => category.COD_NIVEL !== this.categoriesMajorCurrent);
+    }
+  }
 }
